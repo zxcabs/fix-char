@@ -1,0 +1,9 @@
+{ 
+	"name": "fix-char",
+	"version": "0.0.1",
+	"description": "Fix chars after node-jscoverage",
+	"author": "Evgeny Reznichenko <kusakyky@gmail.com>",
+	"bin": {
+		"fix-char": "./bin/fix-char"
+	}
+}
