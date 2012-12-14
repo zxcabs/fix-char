@@ -1,42 +1,21 @@
 #!/usr/bin/env node
 
 var fs = require('fs'),
-	file = process.argv[2];
-	
-function exit(err) {
-	if (err) {
-		console.error(err);
-		process.exit(1);
-	} else {
-		process.exit(0);
-	}
+	files = process.argv.slice(2);
+
+function replaceFn(str, n) {
+	return String.fromCharCode(n);
 }
 
 function decode(data, fn) {
-	var str = data.replace(/&#(\d{4});/g, function (str, n) { return String.fromCharCode(n)});
-	fn(str);
+	return data.replace(/&#(\d{4});/g, replaceFn);
+}
+	
+function fix(filename) {
+	var data = fs.readFileSync(filename, 'utf8');
+	fs.writeFileSync(filename, decode(data));
 }
 
-function onDecode(data) {
-	fs.writeFile(file, data, 'utf8', function (err) {
-		if (err) {
-			exit(err);
-		} else {
-			exit();
-		}
-	});
+while (files.length) {
+	fix(files.pop());
 }
-
-function onReadFile(err, data) {
-	if (err) {
-		exit(err);
-	} else {
-		decode(data, onDecode);
-	}
-}
-
-if (!file) {
-	exit('no file');
-}
-
-fs.readFile(file, 'utf8', onReadFile);
